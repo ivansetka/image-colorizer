@@ -143,8 +143,12 @@ Training was performed on `40%` of the available training data using the followi
   
 The model uses the Lab color space and minimizes the mean squared error (MSE) between the predicted and ground-truth `ab` color channels. Additionally, a cross-entropy loss is applied for classification, which helps provide global context and improves color quality.  
   
-The total loss function is:  
-$$ \mathcal{L} = \sum_{i=1}^{N} (\hat{ab}_i - {ab}_i)^2 - \alpha \sum_{j=1}^{C} y_j \log(\hat{y}_j), $$  
+The total loss function is:
+
+<div align="center">
+<img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}=\sum_{i=1}^{N}(\hat{ab}_i-{ab}_i)^2-\alpha\sum_{j=1}^{C}y_j\log(\hat{y}_j)," alt="cnn_loss">
+</div>
+
 where `α` is set to `1/300`, following the original paper.  
 Key training hyperparameters:  
 - Optimizer: `ADADELTA`,
@@ -180,10 +184,11 @@ The first model variant was found to converge slowly in early epochs. To address
 **Phase 1: Generator Pretraining**
 
 In the pretraining phase, `5%` of the training images are used with resizing to `256×256`. The Lab color space is used, and the loss is defined as the L1 difference between the predicted and ground truth `ab` color channels. This encourages the generator to capture low-frequency structure and overall image layout, even if the result may appear slightly blurry. The loss function is:
-$$
-\mathcal{L}_{L1} =  
-\mathbb{E}_{{\mathbf{x}, \mathbf{y} \sim p_{data}(\mathbf{y}), \mathbf{z}}}[\|\mathbf{y} - G(\mathbf{x}, \mathbf{z})\|].
-$$
+
+<div align="center">
+<img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{L1}=\mathbb{E}_{{\mathbf{x},\mathbf{y}\sim&space;p_{data}(\mathbf{y}),\mathbf{z}}}[\|\mathbf{y}-G(\mathbf{x},\mathbf{z})\|]." alt="gan1_loss">
+</div>
+
 Key training hyperparameters:  
 - Optimizer: `Adam` with `β₁ = 0.9`, and `β₂ = 0.999`,
 - Initial learning rate: `1e-4`,
@@ -195,15 +200,15 @@ The training subset is randomly refreshed after `10 epochs`. Each epoch in this 
 **Phase 2: Conditional GAN Training**
 
 In the second phase, the full cGAN model is trained on `10%` of the dataset. This phase enhances high-frequency detail preservation using the patch discriminator. Again, training is done in the Lab color space at a resolution of `256×256`. The total loss combines adversarial and L1 components:
-$$
-\mathcal{L}_{cGAN} =  
-\mathbb{E}_{{\mathbf{x}, \mathbf{y} \sim p_{data}(\mathbf{y})}}[\log D(\mathbf{x}, \mathbf{y})] +  
-\mathbb{E}_{{\mathbf{x}, \mathbf{z} \sim p_{z}(\mathbf{z})}}[\log (1 - D(\mathbf{x}, G(\mathbf{x}, \mathbf{z})))],
-$$
 
-$$
-\mathcal{L} = \mathcal{L}_{cGAN} + \lambda\mathcal{L}_{L1},
-$$
+<div align="center">
+<img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{cGAN}=\mathbb{E}_{{\mathbf{x},\mathbf{y}\sim&space;p_{data}(\mathbf{y})}}[\log&space;D(\mathbf{x},\mathbf{y})]&plus;\mathbb{E}_{{\mathbf{x},\mathbf{z}\sim&space;p_{z}(\mathbf{z})}}[\log(1-D(\mathbf{x},G(\mathbf{x},\mathbf{z})))]," alt="gan2_loss">
+</div>
+
+<div align="center">
+<img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}=\mathcal{L}_{cGAN}&plus;\lambda\mathcal{L}_{L1}," alt="gan3_loss">
+</div>
+
 where `λ` is set to 100. 
 Key training hyperparameters:  
 - Optimizer: `Adam` with `β₁ = 0.5`, and `β₂ = 0.999`,
@@ -279,16 +284,19 @@ In the second variant of the model, multiple color spaces are used: RGB, Lab, HS
 #### ⚙️ Training & Optimization  
 
 For training, the first variant using only the Lab color space is selected. The model is trained on `3.5%` of the total training set, with images resized to a resolution of `256x256`. The total loss function is defined as a weighted combination of four loss terms:
-$$
-\mathcal{L} = \lambda_{pix} \mathcal{L}_{pix} + \lambda_{per} \mathcal{L}_{per} + \lambda_{adv} \mathcal{L}_{adv} + \lambda_{col} \mathcal{L}_{col}.
-$$
--   $\mathcal{L}_{pix}$ is the L1 pixel-wise loss between the ground truth and the predicted image, with $\lambda_{pix} = 1$.
--   $\mathcal{L}_{per}$ is the perceptual loss that promotes semantic similarity by computing a weighted L1 distance between features extracted by a pretrained VGG-16 network. Both the real and predicted images are passed through the network independently. $\lambda_{per} = 5$.
--   $\mathcal{L}_{adv}$ is the adversarial loss computed using a local patch discriminator, identical to the one used in the GAN model. $\lambda_{adv} = 1$.
--   $\mathcal{L}_{col}$ is the colorfulness loss, encouraging the generation of more vibrant colors:  
-$$
-    \mathcal{L}_{col} = 1 - [\sigma_{rgyb}(\hat{I_c}) + 0.3 \cdot \mu_{rgyb}(\hat{I_c})] / 100,  
-$$ where $\sigma_{rgyb}$ and $\mu_{rgyb}$ denote the standard deviation and mean of the `red–green` and `yellow–blue` chromatic axes. $\lambda_{col} = 0.5$.
+<div align="center">
+<img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}=\lambda_{pix}\mathcal{L}_{pix}&plus;\lambda_{per}\mathcal{L}_{per}&plus;\lambda_{adv}\mathcal{L}_{adv}&plus;\lambda_{col}\mathcal{L}_{col}." alt="transformer1_loss">
+</div>
+
+- <img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{pix}" alt="transformer2_loss"> is the L1 pixel-wise loss between the ground truth and the predicted image, with $\lambda_{pix} = 1$.
+- <img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{per}" alt="transformer3_loss"> is the perceptual loss that promotes semantic similarity by computing a weighted L1 distance between features extracted by a pretrained VGG-16 network. Both the real and predicted images are passed through the network independently. $\lambda_{per} = 5$.
+- <img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{adv}" alt="transformer4_loss"> is the adversarial loss computed using a local patch discriminator, identical to the one used in the GAN model. $\lambda_{adv} = 1$.
+- <img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{col}" alt="transformer5_loss"> is the colorfulness loss, encouraging the generation of more vibrant colors:  
+<div align="center">
+<img src="https://latex.codecogs.com/svg.image?\small&space;\mathcal{L}_{col}=1-[\sigma_{rgyb}(\hat{I_c})&plus;0.3\cdot\mu_{rgyb}(\hat{I_c})]/100," alt="transformer6_loss">
+</div> 
+
+where $\sigma_{rgyb}$ and $\mu_{rgyb}$ denote the standard deviation and mean of the `red–green` and `yellow–blue` chromatic axes. $\lambda_{col} = 0.5$.
 
 Key training hyperparameters: 
 -   Optimizer: `AdamW` with `β₁ = 0.9`, and `β₂ = 0.999`,
