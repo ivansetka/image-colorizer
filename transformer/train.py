@@ -6,7 +6,7 @@ from discriminator import PatchDiscriminator
 from imagenet import ImageNetDataset
 from losses import TransformerLoss, ColorfulnessLoss, AdversarialLoss, PerceptualLoss, PixelLoss
 from model import TransformerModel
-from project.transformer import config
+from transformer import config
 from utils import transform, make_subset, load_checkpoint, save_checkpoint, save_random_examples
 
 

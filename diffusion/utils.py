@@ -8,7 +8,7 @@ from skimage import color
 from torchvision.transforms import transforms
 from tqdm import tqdm
 
-from project.diffusion import config
+from diffusion import config
 
 
 def rgb2lab(image):

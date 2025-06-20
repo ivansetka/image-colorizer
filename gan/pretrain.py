@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 from generator import PretrainedGeneratorWrapper
 from imagenet import ImageNetDataset
-from project.gan import config
+from gan import config
 from utils import transform, make_subset
 
 

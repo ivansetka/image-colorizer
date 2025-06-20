@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from skimage import color
 from torchvision.transforms import transforms
 
-from project.cnn import config
+from cnn import config
 
 
 def rgb2lab(image):

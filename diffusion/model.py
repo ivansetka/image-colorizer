@@ -3,8 +3,8 @@ import math
 import torch
 from torch import nn
 
-from project.diffusion import config
-from project.diffusion.networks import (
+from diffusion import config
+from diffusion.networks import (
     _ResBlock,
     _ResidualNormBlock,
     _MultiheadLinearAttention,

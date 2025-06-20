@@ -1,6 +1,6 @@
 import torch.nn.functional as F
 
-from project.cnn import config
+from cnn import config
 
 
 def colorization_loss(generated_img, original_img):

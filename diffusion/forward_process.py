@@ -2,7 +2,7 @@ import math
 
 import torch
 
-from project.diffusion import config
+from diffusion import config
 
 
 class Diffusion:

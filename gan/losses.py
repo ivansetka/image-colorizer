@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 
-from project.gan import config
+from gan import config
 
 
 def generator_loss(fake_output, generated_img, original_img):

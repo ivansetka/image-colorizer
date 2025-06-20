@@ -5,7 +5,7 @@ from tqdm import tqdm
 from imagenet import ImageNetDataset
 from losses import colorization_loss, classification_loss
 from model import CNNModel
-from project.cnn import config
+from cnn import config
 from utils import transform, make_subset, load_checkpoint, save_checkpoint, save_random_examples
 
 

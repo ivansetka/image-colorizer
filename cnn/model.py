@@ -1,6 +1,6 @@
 from torch import nn
 
-from project.cnn.networks import (
+from cnn.networks import (
     LowLevelFeaturesNetwork,
     MidLevelFeaturesNetwork,
     GlobalFeaturesNetwork,

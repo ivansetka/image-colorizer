@@ -6,7 +6,7 @@ from discriminator import Discriminator
 from generator import PretrainedGeneratorWrapper
 from imagenet import ImageNetDataset
 from losses import discriminator_loss, generator_loss
-from project.gan import config
+from gan import config
 from utils import transform, make_subset, load_checkpoint, save_checkpoint, save_random_examples
 
 

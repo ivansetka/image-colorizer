@@ -3,10 +3,10 @@ from torch import nn
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from diffusion import Diffusion
+from forward_process import Diffusion
 from imagenet import ImageNetDataset
 from model import DiffusionUNetModel, GrayscaleEncoder
-from project.diffusion import config
+from diffusion import config
 from utils import transform, make_subset, load_checkpoint, save_checkpoint, save_random_examples
 
 
